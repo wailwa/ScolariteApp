@@ -6,25 +6,33 @@
 
     $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
 
-    $lvlLabels = [1 => 'L1', 2 => 'L2', 3 => 'L3', 4 => 'M1', 5 => 'M2'];
+    $lvlLabels = [1 => 'L1', 2 => 'L2', 3 => 'L3', 4 => 'M1', 5 => 'M2']; //affecter chaque valeur a un niveau puisque les valeurs sont INT dans la base de données
+
+    //compter le nombre de students
     $queryStudents = "SELECT * FROM Students";
     $resultStudents = mysqli_query($conn, $queryStudents);
     $studentCounter = mysqli_num_rows($resultStudents);
 
+    //compter le nombre de modules
     $queryModules = "SELECT * FROM Modules";
     $resultModules = mysqli_query($conn, $queryModules);
     $moduleCounter = mysqli_num_rows($resultModules);
-
+    
+    //compter le nombre de teachers
     $queryTeachers = "SELECT * FROM Teachers";
     $resultTeachers = mysqli_query($conn, $queryTeachers);
     $teacherCounter = mysqli_num_rows($resultTeachers);
 
+    //sauvegarder le nom, code et coefficient de chaque module dans $result
     $sql = "SELECT `name`, code, coefficient FROM Modules";
     $result = mysqli_query($conn, $sql);
 
+    //sauvegarder le matricule, family_name, name, id, lvl de chaque student dans $resultRecentStudents dans l'ordre decroissant par id
     $queryRecentStudents = "SELECT matricule, family_name, surname, id, lvl FROM Students ORDER BY id DESC LIMIT 5";
     $resultRecentStudents = mysqli_query($conn, $queryRecentStudents);
 ?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -38,7 +46,7 @@
 </head>
 <body>
 <div class="layout">
-
+    <!-- sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
             <h2>USTHB – Admin</h2>
@@ -69,12 +77,14 @@
         </div>
     </aside>
 
+    <!-- header -->
     <main class="main">
         <div class="page-header">
             <h1>Tableau de Bord Administrateur</h1>
             <p>Vue d'ensemble de la gestion universitaire</p>
         </div>
 
+        <!-- ecrire le contenu des variable compteurs from php-->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-info">
@@ -105,29 +115,33 @@
             </div>
         </div>
 
-        
+        <!-- recent students panel et modules panel-->
         <div class="bottom-grid">
             <div class="panel">
+                <!-- recent students-->
                 <div class="panel-title">Étudiants Récents</div>
-                <?php while($student = mysqli_fetch_assoc($resultRecentStudents)): ?>
+                <!-- mettre les informations des etudiants recent dans le panel -->
+                <?php while($student = mysqli_fetch_assoc($resultRecentStudents)): ?> <!-- une boucle qui vas itérer pour chaque ligne dans la table student -->
                 <div class="student-row">
                     <div class="student-info">
                         <strong><?= htmlspecialchars($student['family_name']) ?> <?= htmlspecialchars($student['surname']) ?></strong>
                         <span><?= htmlspecialchars($student['matricule']) ?></span>
                     </div>
-                    <span class="badge-level"><?= $lvlLabels[$student['lvl']] ?? 'N/A' ?></span>
+                    <span class="badge-level"><?= $lvlLabels[$student['lvl']] ?? 'N/A' ?></span> <!-- si $lvllabels est null, on ecrit N/A -->
                 </div>
-                <?php endwhile; ?>
+                <?php endwhile; ?> <!-- boucle finit -->
+                
+                <!-- si la table des etudiants est vide, on ecrit qu'aucun etudiant est trouvé -->
                 <?php if(mysqli_num_rows($resultRecentStudents) === 0): ?>
                     <p style="color: var(--muted); font-size: .85rem; padding: 14px 0;">Aucun étudiant trouvé.</p>
                 <?php endif; ?>
             </div>
             
-            
+            <!-- panel des modules -->
             <div class="panel modules-panel">
                 <div class="panel-title">Modules</div>
                 <div class="modules-slider-wrapper">
-                    <?php while($module = mysqli_fetch_assoc($result)): ?>
+                    <?php while($module = mysqli_fetch_assoc($result)): ?> <!-- itérer pour chaque ligne dans la table -->
                     <div class="module-row">
                         <div class="module-info">
                             <strong><?= htmlspecialchars($module['name']) ?></strong>
@@ -135,7 +149,8 @@
                         </div>
                         <span class="badge-coef">Coef. <?= $module['coefficient'] ?></span>
                     </div>
-                    <?php endwhile; ?>
+                    <?php endwhile; ?> <!-- fin de boucle -->
+                    <!-- si la table est vide on ecrit qu'aucun module est trouvé -->
                     <?php if(mysqli_num_rows($result) === 0): ?>
                         <p style="color: var(--muted); font-size: .85rem; padding: 14px 0;">Aucun module trouvé.</p>
                     <?php endif; ?>
@@ -145,6 +160,6 @@
     </main>
 </div>
 
-<div class="help-btn" title="Aide"><i class="fa-solid fa-question"></i></div>
+
 </body>
 </html>

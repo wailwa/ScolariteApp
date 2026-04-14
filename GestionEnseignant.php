@@ -3,26 +3,29 @@
     $db_user   = "root";
     $db_pass   = "";
     $db_name   = "Usthb_app";
-
+    
     $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
 
+    //si le boutton delete est cliqué
     if(isset($_GET['delete_id'])){
         $delete_id = intval($_GET['delete_id']);
         mysqli_query($conn, "DELETE FROM Teachers WHERE id=$delete_id");
-        header("Location: GestionEnseignant.php");
+        header("Location: GestionEnseignant.php"); // refresh
         exit();
     }
 
+    //si le boutton ajouter est cliqué
     if(isset($_POST['action']) && $_POST['action'] === 'add'){
         $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
         $last_name  = mysqli_real_escape_string($conn, $_POST['last_name']);
         $email      = mysqli_real_escape_string($conn, $_POST['email']);
         $sql = "INSERT INTO Teachers (first_name, last_name, email) VALUES ('$first_name', '$last_name', '$email')";
         mysqli_query($conn, $sql);
-        header("Location: GestionEnseignant.php");
+        header("Location: GestionEnseignant.php");//refresh
         exit();
     }
 
+    //si le boutton edit est cliqué
     if(isset($_POST['action']) && $_POST['action'] === 'edit'){
         $id         = intval($_POST['teacher_id']);
         $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
@@ -34,13 +37,16 @@
         exit();
     }
 
+    //requete pour sauvegarder tout les enseignants dans teachers[]
     $queryTeachers = "SELECT t.id, t.first_name, t.last_name, t.email, m.name AS module_name, m.code AS module_code
                       FROM Teachers t
                       LEFT JOIN Modules m ON m.teacher_id = t.id
                       ORDER BY t.id ASC";
     $resultTeachers = mysqli_query($conn, $queryTeachers);
     $teachers = [];
-    while($t = mysqli_fetch_assoc($resultTeachers)) $teachers[] = $t;
+
+    while($t = mysqli_fetch_assoc($resultTeachers))
+         $teachers[] = $t; //boucle pour mettre toutes les lignes de la table enseignant dans le tableau teachers[]
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -54,6 +60,8 @@
     <link rel="stylesheet" href="GestionEnseignant.css">
 </head>
 <body>
+
+<!-- sidebar -->
 <div class="layout">
     <aside class="sidebar">
         <div class="sidebar-brand">
@@ -72,47 +80,52 @@
             <a href="login.php"><i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion</a>
         </div>
     </aside>
-
+    <!-- header -->
     <main class="main">
         <div class="page-header">
             <h1>Gestion des Enseignants</h1>
             <p>Ajouter, modifier et gérer les enseignants</p>
         </div>
         <div class="toolbar">
-            <div class="search-box">
+            <div class="search-box"> <!-- searchbox des enseignants -->
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" id="searchInput" placeholder="Rechercher un enseignant...">
             </div>
-            <button class="btn-add" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Ajouter Enseignant</button>
+            <button class="btn-add" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> Ajouter Enseignant</button> <!-- boutton ajouter cliqué -->
         </div>
+
+        <!-- la tableau d'affichage des enseignants -->
         <div class="table-panel">
             <div class="table-wrapper">
                 <table id="teachersTable">
                     <thead>
                         <tr>
-                            <th>ID</th><th>NOM</th><th>PRÉNOM</th><th>EMAIL</th><th>MODULE</th><th>CODE</th><th>ACTIONS</th>
+                            <th>ID</th><th>NOM</th><th>PRÉNOM</th><th>EMAIL</th><th>MODULE</th><th>CODE</th><th>ACTIONS</th> <!-- titres  des colomnes-->
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($teachers) > 0): ?>
-                            <?php foreach($teachers as $t): ?>
+                        <?php if(count($teachers) > 0): ?> <!-- si il existe des enseignants dans la base de données-->
+                            <?php foreach($teachers as $t): ?> <!-- boucle pour itérer  chaque ligne de la table enseignant -->
                             <tr>
+                                <!-- ecrire les informations de chaque enseignant dans la table -->
                                 <td><?= htmlspecialchars($t['id']) ?></td>
                                 <td><?= htmlspecialchars($t['last_name']) ?></td>
                                 <td><?= htmlspecialchars($t['first_name']) ?></td>
                                 <td><?= htmlspecialchars($t['email'] ?? '–') ?></td>
                                 <td><?= htmlspecialchars($t['module_name'] ?? '–') ?></td>
                                 <td>
-                                    <?php if($t['module_code']): ?>
-                                        <span class="badge-module"><?= htmlspecialchars($t['module_code']) ?></span>
+                                    <?php if($t['module_code']): ?> 
+                                        <span class="badge-module"><?= htmlspecialchars($t['module_code']) ?></span> <!-- l'icon violet du code module -->
                                     <?php else: ?>
                                         <span class="no-module">–</span>
                                     <?php endif; ?>
                                 </td>
                                 <td class="actions-cell">
+                                    <!-- boutton modifier cliqué-->
                                     <button class="btn-icon btn-edit" title="Modifier" onclick="openEditModal(<?= $t['id'] ?>,'<?= addslashes($t['first_name']) ?>','<?= addslashes($t['last_name']) ?>','<?= addslashes($t['email'] ?? '') ?>')">
                                         <i class="fa-solid fa-pen"></i>
                                     </button>
+                                    <!-- boutton delete cliqué-->
                                     <a href="GestionEnseignant.php?delete_id=<?= $t['id'] ?>" class="btn-icon btn-delete" title="Supprimer" onclick="return confirm('Supprimer cet enseignant ?')">
                                         <i class="fa-solid fa-trash"></i>
                                     </a>
@@ -120,7 +133,7 @@
                             </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <tr><td colspan="7" class="empty-msg">Aucun enseignant trouvé.</td></tr>
+                            <tr><td colspan="7" class="empty-msg">Aucun enseignant trouvé.</td></tr> <!-- si il n'ya pas d'enseignat dans la table -->
                         <?php endif; ?>
                     </tbody>
                 </table>
@@ -129,15 +142,15 @@
     </main>
 </div>
 
-<div class="help-btn" title="Aide"><i class="fa-solid fa-question"></i></div>
+
 
 <div class="modal-overlay" id="addModal">
     <div class="modal">
-        <div class="modal-header">
+        <div class="modal-header"> <!-- le panel d'ajout-->
             <h2>Ajouter un Enseignant</h2>
             <button class="modal-close" onclick="closeModal('addModal')"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <form method="POST" action="GestionEnseignant.php">
+        <form method="POST" action="GestionEnseignant.php"> <!-- form d'ajout-->
             <input type="hidden" name="action" value="add">
             <div class="modal-body">
                 <div class="form-row">
@@ -154,13 +167,13 @@
     </div>
 </div>
 
-<div class="modal-overlay" id="editModal">
+<div class="modal-overlay" id="editModal"> <!-- panel d'edit-->
     <div class="modal">
         <div class="modal-header">
             <h2>Modifier l'Enseignant</h2>
             <button class="modal-close" onclick="closeModal('editModal')"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <form method="POST" action="GestionEnseignant.php">
+        <form method="POST" action="GestionEnseignant.php"> <!-- form d'edit-->
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="teacher_id" id="edit_teacher_id">
             <div class="modal-body">
@@ -178,6 +191,7 @@
     </div>
 </div>
 
+<!-- javascript -->
 <script>
     document.getElementById('searchInput').addEventListener('input', function() {
         const query = this.value.toLowerCase();

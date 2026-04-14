@@ -6,7 +6,7 @@
 
     $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
 
-    if(isset($_POST['action']) && $_POST['action'] === 'save_grade'){
+    if(isset($_POST['action']) && $_POST['action'] === 'save_grade'){ //le boutton sauveagarder note est cliqué, update database
         $student_id = intval($_POST['student_id']);
         $module_id  = intval($_POST['module_id']);
         $grade      = floatval($_POST['grade']);
@@ -14,18 +14,19 @@
             header("Location: Notes.php");
             exit();
         }
+        //requete pour inserer la note dans la table grades au module et l'etudiant correspondant
         $sql = "INSERT INTO Grades (student_id, module_id, grade)
                 VALUES ($student_id, $module_id, $grade)
-                ON DUPLICATE KEY UPDATE grade = $grade";
+                ON DUPLICATE KEY UPDATE grade = $grade"; //si il exsite deja un grade pour le module, update it
         mysqli_query($conn, $sql);
-        header("Location: Notes.php?student_id=$student_id");
+        header("Location: Notes.php?student_id=$student_id"); //refresh
         exit();
     }
-
+    //requete pour sauvegarder tout les etudiants dans le tableau student[]
     $queryStudents = "SELECT id, matricule, family_name, surname FROM Students ORDER BY family_name ASC";
     $resultStudents = mysqli_query($conn, $queryStudents);
     $students = [];
-    while($s = mysqli_fetch_assoc($resultStudents)) $students[] = $s;
+    while($s = mysqli_fetch_assoc($resultStudents)) $students[] = $s; //mettre chaque ligne dans le tableau
 
     $selectedStudent = null;
     $studentGrades   = [];
@@ -39,18 +40,20 @@
         $r = mysqli_query($conn, "SELECT id, matricule, family_name, surname, lvl FROM Students WHERE id=$selectedId");
         $selectedStudent = mysqli_fetch_assoc($r);
 
-        // Load modules filtered by this student's level
+        // Loader les modules correspondant au niveau de l'etudiant
         $studentLvl = $selectedStudent['lvl'];
         $queryModules = "SELECT id, code, `name`, coefficient FROM Modules WHERE lvl=$studentLvl ORDER BY `name` ASC";
         $resultModules = mysqli_query($conn, $queryModules);
-        while($m = mysqli_fetch_assoc($resultModules)) $modules[] = $m;
 
+        while($m = mysqli_fetch_assoc($resultModules)) $modules[] = $m; //les mettre dans le tableau
+        //rechercher les note des modules de cet etudiant
         $queryGrades = "SELECT g.module_id, g.grade, m.code, m.`name`, m.coefficient
                         FROM Grades g JOIN Modules m ON g.module_id = m.id
                         WHERE g.student_id = $selectedId";
         $resultGrades = mysqli_query($conn, $queryGrades);
-        while($g = mysqli_fetch_assoc($resultGrades)) $studentGrades[$g['module_id']] = $g;
+        while($g = mysqli_fetch_assoc($resultGrades)) $studentGrades[$g['module_id']] = $g; //les mettre dans un tableau
 
+        //calculer la moyenne
         $totalWeight = 0; $weightedSum = 0;
         foreach($studentGrades as $g){
             $weightedSum += $g['grade'] * $g['coefficient'];
@@ -58,7 +61,7 @@
         }
         if($totalWeight > 0){
             $moyenne = round($weightedSum / $totalWeight, 2);
-            $statut  = $moyenne >= 10 ? 'Admis' : 'Recalé';
+            $statut  = $moyenne >= 10 ? 'Admis' : 'Ajourné'; //admis ou ajourné
         }
     }
 ?>
@@ -80,6 +83,7 @@
             <h2>USTHB – Admin</h2>
             <p>Faculté d'Informatique</p>
         </div>
+        <!-- sidebar-->
         <nav class="sidebar-nav">
             <a href="dashboard_admin.php" class="nav-item"><i class="fa-solid fa-table-columns"></i> Tableau de Bord</a>
             <a href="GestionEtudiant.php" class="nav-item"><i class="fa-solid fa-user-graduate"></i> Gestion des Étudiants</a>
@@ -92,13 +96,13 @@
             <a href="login.php"><i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion</a>
         </div>
     </aside>
-
+    <!-- header -->
     <main class="main">
         <div class="page-header">
             <h1>Gestion des Notes</h1>
             <p>Saisir et gérer les notes des étudiants</p>
         </div>
-
+        <!-- le panel pour saisir les note-->
         <div class="notes-grid">
             <div class="panel">
                 <h2 class="panel-title">Saisie de Note</h2>
@@ -106,9 +110,9 @@
                     <input type="hidden" name="action" value="save_grade">
                     <div class="form-group">
                         <label>Sélectionner Étudiant</label>
-                        <input type="text" id="studentSearch" placeholder="Rechercher un étudiant..." autocomplete="off">
+                        <input type="text" id="studentSearch" placeholder="Rechercher un étudiant..." autocomplete="off"> <!-- un searchbox pour rechercher l'etudiant-->
                         <div class="student-dropdown" id="studentDropdown">
-                            <?php foreach($students as $s): ?>
+                            <?php foreach($students as $s): ?> <!-- dropdown pour afficher et selectioner les etudiants-->
                                 <div class="student-option"
                                      data-id="<?= $s['id'] ?>"
                                      data-name="<?= htmlspecialchars($s['matricule'].' - '.$s['family_name'].' '.$s['surname']) ?>">
@@ -116,18 +120,18 @@
                                 </div>
                             <?php endforeach; ?>
                         </div>
-                        <input type="hidden" name="student_id" id="studentIdInput" value="<?= $selectedId ?>">
+                        <input type="hidden" name="student_id" id="studentIdInput" value="<?= $selectedId ?>"> <!-- $selectedId continet l'id de letudiant selectioné-->
                     </div>
                     <div class="form-group">
-                        <label>Sélectionner Module</label>
+                        <label>Sélectionner Module</label> <!-- dropdown pour selectionner le module -->
                         <select name="module_id">
-                            <?php foreach($modules as $m): ?>
+                            <?php foreach($modules as $m): ?> <!-- afficher juste les modules correspondant au niveau de l'etudiant-->
                                 <option value="<?= $m['id'] ?>"><?= htmlspecialchars($m['code'].' - '.$m['name']) ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Note (0-20)</label>
+                        <label>Note (0-20)</label> <!-- afficher la note-->
                         <input type="number" name="grade" min="0" max="20" step="0.25" placeholder="Entrer la note" required>
                     </div>
                     <button type="submit" class="btn-save-grade">
@@ -135,7 +139,7 @@
                     </button>
                 </form>
 
-                <?php if($moyenne !== null): ?>
+                <?php if($moyenne !== null): ?> <!-- afficher la moyenne-->
                 <div class="moyenne-card">
                     <span class="moyenne-label">Moyenne Générale:</span>
                     <span class="moyenne-value"><?= $moyenne ?> / 20</span>
@@ -143,7 +147,7 @@
                 </div>
                 <?php endif; ?>
             </div>
-
+            <!-- le panel pour afficher toute les notes de l'etudiant selectioné-->
             <div class="panel">
                 <h2 class="panel-title">Notes de l'Étudiant</h2>
                 <?php if($selectedStudent): ?>
@@ -178,8 +182,8 @@
     </main>
 </div>
 
-<div class="help-btn" title="Aide"><i class="fa-solid fa-question"></i></div>
 
+<!-- javasript -->
 <script>
     const searchInput = document.getElementById('studentSearch');
     const dropdown    = document.getElementById('studentDropdown');

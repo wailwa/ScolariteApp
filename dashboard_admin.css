@@ -122,14 +122,7 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(-
 .module-info span   { font-size: .78rem; color: var(--muted); }
 .badge-coef { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; border-radius: 20px; padding: 4px 13px; font-size: .78rem; font-weight: 600; }
 
-.help-btn {
-    position: fixed; bottom: 24px; right: 24px;
-    width: 44px; height: 44px; background: var(--navy); color: #fff;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; cursor: pointer;
-    box-shadow: 0 4px 18px rgba(26,42,94,.3); transition: transform .2s;
-}
-.help-btn:hover { transform: scale(1.1); }
+
 
 @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
