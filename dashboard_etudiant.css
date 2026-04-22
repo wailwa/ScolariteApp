@@ -4,6 +4,7 @@
     --navy:    #1a2a5e;
     --blue:    #2a52be;
     --accent:  #4a7cf7;
+    --accent-blue: #4a7cf7;
     --green:   #22c55e;
     --bg:      #f0f4fb;
     --card:    #ffffff;
@@ -12,11 +13,50 @@
     --border:  #e2e8f0;
     --radius:  16px;
     --shadow:  0 2px 20px rgba(30,41,59,.08);
+    --sidebar-w:   260px;
 }
+
+
+.sidebar {
+    width: var(--sidebar-w);
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+}
+
+.sidebar-brand { padding: 28px 24px 20px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.sidebar-brand h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: #fff; letter-spacing: .5px; }
+.sidebar-brand p { font-size: .78rem; color: rgba(255,255,255,.5); margin-top: 2px; }
+
+.sidebar-nav { flex: 1; padding: 18px 12px; display: flex; flex-direction: column; gap: 4px; }
+
+.nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 10px;
+    color: rgba(255,255,255,.65); text-decoration: none;
+    font-size: .88rem; font-weight: 500;
+    transition: background .18s, color .18s;
+}
+.nav-item i { width: 18px; text-align: center; font-size: .9rem; }
+.nav-item:hover { background: rgba(255,255,255,.08); color: #fff; }
+.nav-item.active { background: var(--accent-blue); color: #fff; }
+
+.sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,.08); }
+.sidebar-footer a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px; border-radius: 10px;
+    color: rgba(255,255,255,.6); text-decoration: none;
+    font-size: .88rem; transition: background .18s, color .18s;
+}
+.sidebar-footer a:hover { background: rgba(255,255,255,.08); color: #fff; }
+.layout { display: flex; min-height: 100vh; }
 
 html, body { min-height: 100%; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); }
 
-.page { max-width: 860px; margin: 0 auto; padding: 40px 24px 60px; display: flex; flex-direction: column; gap: 24px; }
+.page { margin-left: var(--sidebar-w); max-width: 860px; margin: 0 auto; padding: 40px 24px 60px; display: flex; flex-direction: column; gap: 24px; }
 
 .page-header h1 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 2rem; color: var(--text); }
 .page-header p { color: var(--muted); font-size: .9rem; margin-top: 4px; }

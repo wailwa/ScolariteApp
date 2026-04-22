@@ -13,31 +13,39 @@
 
     $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
 
+    $lvlLabels = [1 => 'L1', 2 => 'L2', 3 => 'L3', 4 => 'M1', 5 => 'M2'];
     $loggedInUserId = $_SESSION['user_id'];
-    $querryInfo = "SELECT matricule, surname, family_name, lvl, email, birth_date FROM Students where user_id = $loggedInUserId";
-    $resultInfo = mysqli_query($conn, $querryInfo);
+
+    $queryInfo = "SELECT id, matricule, surname, family_name, lvl, email, birth_date FROM Students WHERE user_id = $loggedInUserId";
+    $resultInfo = mysqli_query($conn, $queryInfo);
     $studentInfo = mysqli_fetch_assoc($resultInfo);
 
+    $studentGrades = [];
+    $moyenne = null;
+    $statut  = null;
 
+    if($studentInfo){
+        $studentId  = $studentInfo['id'];
+        $studentLvl = $studentInfo['lvl'];
 
-    $querrypassword = "SELECT pass_word FROM users WHERE user_id= $loggedInUserId";
-    $resultpassword = mysqli_query($conn, $querrypassword);
+        $queryGrades = "SELECT g.grade, m.code, m.name, m.coefficient
+                        FROM Grades g
+                        JOIN Modules m ON g.module_id = m.id
+                        WHERE g.student_id = $studentId AND m.lvl = $studentLvl
+                        ORDER BY m.name ASC";
+        $resultGrades = mysqli_query($conn, $queryGrades);
+        while($g = mysqli_fetch_assoc($resultGrades)) $studentGrades[] = $g;
 
-    $sql = "UPDATE Students SET matricule=$matricule,family_name='$family_name',surname='$surname',birth_date='$birth_date',email='$email',lvl='$lvl' WHERE id=$id";  // requete pour sauvegarder le informations modifier dans la table
-    
-    $sqlChangepw = "UPDATE users SET "
-
-
-
-
-
-
-
-
-
-
-
-
+        $totalWeight = 0; $weightedSum = 0;
+        foreach($studentGrades as $g){
+            $weightedSum += $g['grade'] * $g['coefficient'];
+            $totalWeight += $g['coefficient'];
+        }
+        if($totalWeight > 0){
+            $moyenne = round($weightedSum / $totalWeight, 2);
+            $statut  = $moyenne >= 10 ? 'Admis' : 'Recalé';
+        }
+    }
 ?>
 
 
@@ -55,11 +63,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard_etudiant.css">
 </head>
-<body>
-
-<div class="page">
-
-    <!-- ── Page Header ── -->
+<body>  
+<div class="layout">
+    <!-- sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2>USTHB – Etudiant</h2>
+            <p>Faculté d'Informatique</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard_etudiant.php" class="nav-item active">
+                <i class="fa-solid fa-table-columns"></i> Tableau de Bord
+            </a>
+            <a href="ChangermdpEtu.php" class="nav-item">
+                <i class="fa-solid fa-user-graduate"></i> Changer Mot de Passe
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion</a>
+        </div>
+    </aside>
+    <div class="page">
+    <!-- Page Header -->
     <div class="page-header">
         <div>
             <h1>Tableau de Bord Étudiant</h1>
@@ -67,7 +92,7 @@
         </div>
     </div>
 
-    <!-- ── Student Info Card ── -->
+    <!--Student Info Card -->
     <div class="student-card">
         <div class="student-avatar">
             <i class="fa-solid fa-user"></i>
@@ -85,7 +110,7 @@
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Niveau</span>
-                    <span class="meta-value"><?php echo $studentInfo['lvl']; ?></span>
+                    <span class="meta-value"><?php echo $lvlLabels[$studentInfo['lvl']] ?? 'N/A'; ?></span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Date de Naissance</span>
@@ -95,7 +120,7 @@
         </div>
     </div>
 
-    <!-- ── Notes Panel ── -->
+    <!--Notes Panel-->
     <div class="notes-panel">
 
         <!-- Notes header with gradient -->
@@ -127,56 +152,50 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><span class="code-badge">BD</span></td>
-                        <td class="module-name">Base de Données</td>
-                        <td>3</td>
-                        <td>
-                            <span class="grade-value">14.00</span>
-                            <span class="grade-max">/ 20</span>
-                        </td>
-                        <td><span class="badge-valide">✓ Validé</span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="code-badge">ALGO</span></td>
-                        <td class="module-name">Algorithmique</td>
-                        <td>4</td>
-                        <td>
-                            <span class="grade-value">12.00</span>
-                            <span class="grade-max">/ 20</span>
-                        </td>
-                        <td><span class="badge-valide">✓ Validé</span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="code-badge">PWEB</span></td>
-                        <td class="module-name">Programmation Web</td>
-                        <td>3</td>
-                        <td>
-                            <span class="grade-value">18.00</span>
-                            <span class="grade-max">/ 20</span>
-                        </td>
-                        <td><span class="badge-valide">✓ Validé</span></td>
-                    </tr>
+                    <?php if(count($studentGrades) > 0): ?>
+                        <?php foreach($studentGrades as $g): ?>
+                        <tr>
+                            <td><span class="code-badge"><?= htmlspecialchars($g['code']) ?></span></td>
+                            <td class="module-name"><?= htmlspecialchars($g['name']) ?></td>
+                            <td><?= $g['coefficient'] ?></td>
+                            <td>
+                                <span class="grade-value"><?= number_format($g['grade'], 2) ?></span>
+                                <span class="grade-max">/ 20</span>
+                            </td>
+                            <td>
+                                <?php if($g['grade'] >= 10): ?>
+                                    <span class="badge-valide">✓ Validé</span>
+                                <?php else: ?>
+                                    <span class="badge-echec">✗ Échoué</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Aucune note disponible.</td></tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
         <!-- Moyenne footer -->
-        <div class="moyenne-bar">
+        <?php if($moyenne !== null): ?>
+        <div class="moyenne-bar" style="background: <?= $statut === 'Admis' ? 'linear-gradient(135deg,#16a34a,#22c55e)' : 'linear-gradient(135deg,#be123c,#e11d48)' ?>">
             <div class="moyenne-bar-left">
                 <span class="moyenne-title">Moyenne Générale</span>
                 <span class="moyenne-sub">Résultat global</span>
             </div>
             <div class="moyenne-bar-right">
-                <span class="moyenne-number">14.40</span>
+                <span class="moyenne-number"><?= $moyenne ?></span>
                 <span class="moyenne-denom">/ 20</span>
-                <span class="badge-admis">Admis</span>
+                <span class="badge-admis"><?= $statut ?></span>
             </div>
         </div>
+        <?php endif; ?>
 
-    </div><!-- /.notes-panel -->
-
-</div><!-- /.page -->
+    </div>
+</div>
+</div>
 
 
 
