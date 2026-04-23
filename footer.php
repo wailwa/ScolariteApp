@@ -1,3 +1,4 @@
+<?php
 /* Projet programmation web - TP PHP & SQL
   Realise par :
   MECHAI OUIAM         KHELIL MERIEM      AKOUIRADJEMOU OUAIL ABDERRAOUF 
@@ -6,7 +7,7 @@
  Encadre par : Dr. LAACHEMI 
  */
 
-<?php
+
 // Pied de page commun
 // À inclure en bas de chaque page protégée, AVANT </body>
  

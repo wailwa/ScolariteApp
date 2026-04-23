@@ -1,3 +1,4 @@
+<?php
 /* Projet programmation web - TP PHP & SQL
   Realise par :
   MECHAI OUIAM         KHELIL MERIEM      AKOUIRADJEMOU OUAIL ABDERRAOUF 
@@ -8,7 +9,7 @@
 
 
 
-<?php
+
 //  En-tête de chaque page (après connexion)
 // Inclure ce fichier en haut de chaque page protégée.
 // Exemple : require_once 'header.php';

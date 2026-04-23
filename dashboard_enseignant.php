@@ -1,3 +1,4 @@
+<?php
 /* Projet programmation web - TP PHP & SQL
   Realise par :
   MECHAI OUIAM         KHELIL MERIEM      AKOUIRADJEMOU OUAIL ABDERRAOUF 
@@ -7,7 +8,6 @@
  */
 
 
-<?php
 session_start();
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");

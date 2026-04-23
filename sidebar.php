@@ -1,3 +1,4 @@
+<?php
 /* Projet programmation web - TP PHP & SQL
   Realise par :
   MECHAI OUIAM         KHELIL MERIEM      AKOUIRADJEMOU OUAIL ABDERRAOUF 
@@ -9,7 +10,7 @@
 
 
 
-<?php
+
  //Menu latéral dynamique selon le rôle
 // Ce fichier est inclus automatiquement par header.php
 header("Cache-control:no-store,no-cache, must-revalidate");

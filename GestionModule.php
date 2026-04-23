@@ -1,3 +1,4 @@
+<?php
 /* Projet programmation web - TP PHP & SQL
   Realise par :
   MECHAI OUIAM         KHELIL MERIEM      AKOUIRADJEMOU OUAIL ABDERRAOUF 
@@ -6,7 +7,7 @@
  Encadre par : Dr. LAACHEMI 
  */
 
-<?php
+
     $db_server = "localhost";
     $db_user   = "root";
     $db_pass   = "";
