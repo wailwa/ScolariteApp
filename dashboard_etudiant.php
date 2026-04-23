@@ -1,10 +1,13 @@
 <?php
 
-    session_start();
-    if(!isset($_SESSION['user_id'])){
-        header("Location: login.php");
-        exit();
-    }
+session_start();
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin'){
+    header("Location: login.php");
+    exit();
+}
 
     $db_server = "localhost";
     $db_user = "root";
@@ -23,25 +26,8 @@
     $querrypassword = "SELECT pass_word FROM users WHERE user_id= $loggedInUserId";
     $resultpassword = mysqli_query($conn, $querrypassword);
 
-    $sql = "UPDATE Students SET matricule=$matricule,family_name='$family_name',surname='$surname',birth_date='$birth_date',email='$email',lvl='$lvl' WHERE id=$id";  // requete pour sauvegarder le informations modifier dans la table
-    
-    $sqlChangepw = "UPDATE users SET "
-
-
-
-
-
-
-
-
-
-
-
 
 ?>
-
-
-
 
 
 <!DOCTYPE html>

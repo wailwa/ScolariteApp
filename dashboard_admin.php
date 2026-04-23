@@ -1,4 +1,15 @@
 <?php
+
+session_start();
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: post-check=0, pre-check=0",false);
+header("Pragma: no-cache");
+header("Expires: Sat,26 Jul 1997 05:00:00 GMT");
+if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin'){
+    header("Location: login.php");
+    exit();
+}
+
     $db_server = "localhost";
     $db_user = "root";
     $db_pass = "";
@@ -43,6 +54,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="dashboard_admin.css">
+    
+    <script> 
+    window.onpageshow =function(event) {
+       if(event.persisted){
+        window.location.reload()
+       }
+}
+    </script>
 </head>
 <body>
 <div class="layout">
@@ -73,7 +92,7 @@
             </a>
         </nav>
         <div class="sidebar-footer">
-            <a href="login.php"><i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion</a>
+            <a href="logout.php"><i class="fa-solid fa-arrow-right-from-bracket"></i> Déconnexion</a>
         </div>
     </aside>
 

@@ -1,6 +1,9 @@
 <?php
  //Menu latéral dynamique selon le rôle
 // Ce fichier est inclus automatiquement par header.php
+header("Cache-control:no-store,no-cache, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 
 $current_page = basename($_SERVER['PHP_SELF']);
 $user_role    = $_SESSION['user_role']  ?? 'etudiant';
