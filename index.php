@@ -1,3 +1,12 @@
+/* Projet programmation web - TP PHP & SQL
+  Realise par :
+  MECHAI OUIAM         KHELIL MERIEM      AKOUIRADJEMOU OUAIL ABDERRAOUF 
+  232331602210         242431575703              222231581410  
+
+ Encadre par : Dr. LAACHEMI 
+ */
+
+
 <?php
 // la page d'accueil principale du site 
 ini_set('display_errors',1);
@@ -35,6 +44,9 @@ if (isset($_SESSION['user_id'])) {
       --card: #092071;
       --border: #05b1f0;
       --radius: 12px;
+    }
+    .matricule{
+      color: #666;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -598,7 +610,7 @@ if (isset($_SESSION['user_id'])) {
   <strong>USTHB</strong> – Faculté d'Informatique –
   Module Programmation Web (PHP &amp; MySQL) –
   Encadré par <strong>Dr. LAACHEMI</strong><br>
-  Realise par <strong> MECHAI OUIAM ,KHELIL MERIEM,AKOUIRADJEMOU WAIL </strong>
+  Realise par <strong> MECHAI OUIAM  <span class="matricule">232331602210 </span> , KHELIL MERIEM  <span class="matricule"> 242431575703 </span> , AKOUIRADJEMOU WAIL  <span class="matricule"> 222231581410 </span> </strong>
 
 </footer>
 

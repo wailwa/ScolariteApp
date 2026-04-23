@@ -1,3 +1,11 @@
+/* Projet programmation web - TP PHP & SQL
+  Realise par :
+  MECHAI OUIAM         KHELIL MERIEM      AKOUIRADJEMOU OUAIL ABDERRAOUF 
+  232331602210         242431575703              222231581410  
+
+ Encadre par : Dr. LAACHEMI 
+ */
+
 <?php
 // Pied de page commun
 // À inclure en bas de chaque page protégée, AVANT </body>

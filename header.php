@@ -1,3 +1,13 @@
+/* Projet programmation web - TP PHP & SQL
+  Realise par :
+  MECHAI OUIAM         KHELIL MERIEM      AKOUIRADJEMOU OUAIL ABDERRAOUF 
+  232331602210         242431575703              222231581410  
+
+ Encadre par : Dr. LAACHEMI 
+ */
+
+
+
 <?php
 //  En-tête de chaque page (après connexion)
 // Inclure ce fichier en haut de chaque page protégée.
@@ -45,11 +55,13 @@ $user_initials = strtoupper(substr($user_name, 0, 1));
 
     <!HEADER >
     <header class="header">
+    
 
       <!Gauche : titre + fil d'Ariane >
       <div class="header-left">
         <div>
           <div class="header-title"><?= htmlspecialchars($page_title) ?></div>
+          <div style="font-size:12px; color:#888;  margin-to:5px;">
           <?php if (!empty($breadcrumb)): ?>
           <nav class="breadcrumb" aria-label="Fil d'Ariane">
             <a href="index.php"><i class="fa fa-home"></i></a>
