@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 11 avr. 2026 à 00:40
+-- Généré le : jeu. 23 avr. 2026 à 01:23
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.1.25
 
@@ -39,7 +39,13 @@ CREATE TABLE `grades` (
 --
 
 INSERT INTO `grades` (`id`, `student_id`, `module_id`, `grade`) VALUES
-(5, 14, 4, 9);
+(5, 14, 4, 8),
+(6, 14, 5, 0),
+(8, 14, 9, 19),
+(9, 14, 10, 5),
+(10, 14, 6, 10),
+(11, 14, 7, 9),
+(12, 14, 8, 11);
 
 -- --------------------------------------------------------
 
@@ -61,7 +67,13 @@ CREATE TABLE `modules` (
 --
 
 INSERT INTO `modules` (`id`, `code`, `name`, `coefficient`, `teacher_id`, `lvl`) VALUES
-(4, 'BD', 'Base de donnée', 3, 2, 2);
+(4, 'BD', 'Base de donnée', 3, 2, 2),
+(5, 'ARCHI', 'Architecture', 3, 3, 2),
+(6, 'PWEB', 'Programmation web', 3, NULL, 2),
+(7, 'SYS', 'Systeme', 3, NULL, 2),
+(8, 'THG', 'Theorie des graphe', 2, NULL, 2),
+(9, 'ENG', 'Englais', 1, NULL, 2),
+(10, 'GL', 'Genie logiciel', 3, NULL, 2);
 
 -- --------------------------------------------------------
 
@@ -86,7 +98,8 @@ CREATE TABLE `students` (
 
 INSERT INTO `students` (`id`, `matricule`, `surname`, `family_name`, `email`, `lvl`, `birth_date`, `user_id`) VALUES
 (12, 31581410, 'Ouail', 'Akouiradjemou', 'wailw5380@gmail.com', 3, '2026-04-09', 3),
-(14, 31581409, 'moh', 'mohamed', 'moh@gmail.com', 2, '2026-04-04', 5);
+(14, 31581409, 'moh', 'mohamed', 'moh@gmail.com', 2, '2026-04-04', 5),
+(15, 31581408, 'wa', 'wail', 'wailwa@gmail.com', 3, '2026-04-14', 6);
 
 -- --------------------------------------------------------
 
@@ -107,7 +120,8 @@ CREATE TABLE `teachers` (
 --
 
 INSERT INTO `teachers` (`id`, `first_name`, `last_name`, `email`, `user_id`) VALUES
-(2, 'Mohamed', 'Laachemi', 'laachemi@gmail.com', NULL);
+(2, 'Mohamed', 'Laachemi', 'laachemi@gmail.com', NULL),
+(3, 'moh', 'Laachemiii', 'laachemiMoh@gmail.com', NULL);
 
 -- --------------------------------------------------------
 
@@ -129,7 +143,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `email`, `pass_word`, `role`) VALUES
 (1, 'admin@example.com', '123456', 'admin'),
 (3, 'Ouail.Akouiradjemou@usthb.dz', '86J2X$f=@a', 'student'),
-(5, 'moh.mohamed@usthb.dz', '2eWlFn^pyg', 'student');
+(5, 'moh.mohamed@usthb.dz', 'moh1234', 'student'),
+(6, 'wa.wail@usthb.dz', '-vkDpXWjS*', 'student');
 
 --
 -- Index pour les tables déchargées
@@ -182,31 +197,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT pour la table `modules`
 --
 ALTER TABLE `modules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT pour la table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT pour la table `teachers`
 --
 ALTER TABLE `teachers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Contraintes pour les tables déchargées
