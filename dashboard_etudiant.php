@@ -14,7 +14,7 @@ session_start();
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
 header("Expires: 0");
-if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin'){
+if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student'){
     header("Location: login.php");
     exit();
 }
