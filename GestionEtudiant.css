@@ -49,7 +49,7 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(-
 
 
 
-.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; box-shadow: var(--shadow); max-width: 1220px;}
 .search-box {display: flex; align-items: center; gap: 10px; flex: 1; }
 .search-box i { color: var(--muted); font-size: .9rem; }
 .search-box input { border: none; outline: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: .9rem; color: var(--text); width: 100%; }
@@ -64,7 +64,7 @@ html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(-
 .table-wrapper::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 99px; }
 
 table { width: 100%; border-collapse: collapse; min-width: 700px; }
-thead { position: sticky; top: 0; z-index: 1; background: var(--bg); }
+thead { position: sticky; top: 0; z-index: 1; background: var(--bg);}
 thead th { padding: 14px 20px; text-align: left; font-size: .75rem; font-weight: 600; color: var(--muted); letter-spacing: .7px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
 tbody tr:last-child { border-bottom: none; }

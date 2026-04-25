@@ -7,7 +7,7 @@
  Encadre par : Dr. LAACHEMI 
  */
 
-
+    
     $db_server = "localhost";
     $db_user   = "root";
     $db_pass   = "";
@@ -15,10 +15,39 @@
     
     $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
 
+    function generatePassword($length = 10) {
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-='; //le pool des characteres
+        $password = '';
+        $max_index = strlen($chars) - 1;
+
+        for ($i = 0; $i < $length; $i++) {
+            $index = random_int(0, $max_index); // cryptographiclly secure
+            $password .= $chars[$index];
+        }
+
+        return $password;
+    }
+
     //si le boutton delete est cliqué
     if(isset($_GET['delete_id'])){
         $delete_id = intval($_GET['delete_id']);
-        mysqli_query($conn, "DELETE FROM Teachers WHERE id=$delete_id");
+
+        $res = mysqli_query($conn, "SELECT user_id FROM teachers WHERE id=$delete_id");
+        $row = mysqli_fetch_assoc($res);    //le chercher dans la db et sauvegarder la ligne
+
+        if($row){ //si row n'est pas vide on supprime l'enseignant de la base et on supprime son compte
+            $user_id = intval($row['user_id']);
+            mysqli_begin_transaction($conn);
+            $ok1 = mysqli_query($conn, "DELETE FROM teachers WHERE id=$delete_id"); //requete pour supp enseignant
+            $ok2 = mysqli_query($conn, "DELETE FROM users WHERE id=$user_id"); //requete pour supp compte
+            
+            if($ok1 && $ok2){ //si les 2 requetes sont satisfaite, on supprime les 2
+                mysqli_commit($conn);
+            } else {    // si au moins une requete n'est pas satisfaite, on ne supprime pas
+                mysqli_rollback($conn);
+            
+            }
+        }
         header("Location: GestionEnseignant.php"); // refresh
         exit();
     }
@@ -28,8 +57,24 @@
         $first_name = mysqli_real_escape_string($conn, $_POST['first_name']);
         $last_name  = mysqli_real_escape_string($conn, $_POST['last_name']);
         $email      = mysqli_real_escape_string($conn, $_POST['email']);
-        $sql = "INSERT INTO Teachers (first_name, last_name, email) VALUES ('$first_name', '$last_name', '$email')";
-        mysqli_query($conn, $sql);
+         
+        $password = generatePassword(); 
+        $emailusthb  = $last_name . "." . $first_name . "@usthb.dz"; //generer une email usthb qui vas concatené le nom.prenom@usthb.dz
+        $sql_user = "INSERT INTO users (email, pass_word, role) 
+                 VALUES ('$emailusthb', '$password', 'teacher')"; //requete pour insert le password et emailusthb dans la table users
+
+        $sql_teacher = "INSERT INTO Teachers (first_name, last_name, email, user_id) 
+                    VALUES ('$first_name', '$last_name', '$email', LAST_INSERT_ID())"; 
+
+        //assurer que les 2 requte sont satisfaite pour appliquer dans la base de données
+        mysqli_begin_transaction($conn);
+        $ok1 = mysqli_query($conn, $sql_user);
+        $ok2 = mysqli_query($conn, $sql_teacher);
+        if($ok1 && $ok2){
+            mysqli_commit($conn);
+        } else {
+            mysqli_rollback($conn); // ne pas appliquer si au moins une requete ne satisfait pas
+        }
         header("Location: GestionEnseignant.php");//refresh
         exit();
     }
