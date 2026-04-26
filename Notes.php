@@ -9,12 +9,7 @@
 
 
 
-    $db_server = "localhost";
-    $db_user   = "root";
-    $db_pass   = "";
-    $db_name   = "Usthb_app";
-
-    $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
+    require_once "connexion.php"; //inclure le fichier de connexion à la base de données
 
     if(isset($_POST['action']) && $_POST['action'] === 'save_grade'){ //le boutton sauveagarder note est cliqué, update database
         $student_id = intval($_POST['student_id']);

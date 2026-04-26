@@ -17,12 +17,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$db_server = "localhost";
-$db_user   = "root";
-$db_pass   = "";
-$db_name   = "Usthb_app";
-
-$conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
+require_once "connexion.php";
 
 $message     = '';
 $messageType = '';

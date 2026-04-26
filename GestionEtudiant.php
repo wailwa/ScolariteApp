@@ -9,12 +9,7 @@
 
 
 
-    $db_server = "localhost";
-    $db_user = "root";
-    $db_pass = "";
-    $db_name = "Usthb_app";
-
-    $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
+    require_once "connexion.php";
 
     //une fonction qui genere un random password pour les etudiants aprés
     function generatePassword($length = 10) {

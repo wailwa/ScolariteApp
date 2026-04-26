@@ -8,13 +8,7 @@
  */
 
     
-    $db_server = "localhost";
-    $db_user   = "root";
-    $db_pass   = "";
-    $db_name   = "Usthb_app";
-    
-    $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
-
+    require_once "connexion.php";
     function generatePassword($length = 10) {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-='; //le pool des characteres
         $password = '';

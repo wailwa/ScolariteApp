@@ -21,12 +21,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin'){
     exit();
 }
 
-    $db_server = "localhost";
-    $db_user = "root";
-    $db_pass = "";
-    $db_name = "Usthb_app";
-
-    $conn = mysqli_connect($db_server, $db_user, $db_pass, $db_name);
+   require_once "connexion.php";
 
     $lvlLabels = [1 => 'L1', 2 => 'L2', 3 => 'L3', 4 => 'M1', 5 => 'M2']; //affecter chaque valeur a un niveau puisque les valeurs sont INT dans la base de données
 
