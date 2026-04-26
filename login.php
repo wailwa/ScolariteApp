@@ -14,24 +14,19 @@
 require_once "connexion.php"; //inclure le fichier de connexion à la base de données
 
     $error = ""; //pour sauvegarder un message d'erreur au cas ou la connection fails
-
     //rechercher le password et email dans la table users, pas de securité contre sql injection pour l'instant
     if(isset($_POST['submit'])){
        $email    = trim($_POST['email']);
        $password = trim($_POST['password']);
         //requete pour rechercher un user selon le password et email entré
         // Requête préparée : protège contre les injections SQL
-<<<<<<< Updated upstream
+
        $stmt = mysqli_prepare($conn, "SELECT role, id FROM users WHERE email=? AND pass_word=?");//Au lieu d'écrire directement les valeurs dans la requête, on met des ? comme des "cases vides" que MySQL va remplir de façon sécurisée.
        mysqli_stmt_bind_param($stmt, "ss", $email, $password);//MySQL sait maintenant que ce sont des valeurs texte, jamais du code SQL
        mysqli_stmt_execute($stmt);//Envoie la requête à MySQL de façon sécurisée.
        $result = mysqli_stmt_get_result($stmt);// récupère le résultat
-=======
-$stmt = mysqli_prepare($conn, "SELECT role, id FROM users WHERE email=? AND pass_word=?");//Au lieu d'écrire directement les valeurs dans la requête, on met des ? comme des "cases vides" que MySQL va remplir de façon sécurisée.
-mysqli_stmt_bind_param($stmt, "ss", $email, $password);//MySQL sait maintenant que ce sont des valeurs texte, jamais du code SQL
-mysqli_stmt_execute($stmt);//Envoie la requête à MySQL de façon sécurisée.
-$result = mysqli_stmt_get_result($stmt);// récupère le résultat
->>>>>>> Stashed changes
+
+
         
         
         if($result && mysqli_num_rows($result) > 0){    //si une combination d'email et password a été trouver, redirecter le user vers sa page selon le role
